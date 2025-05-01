@@ -8,7 +8,16 @@ st.set_page_config(layout="wide")
 st.title("📊 Manual KPI Chart Generator")
 
 # Inputs
-chart_title = st.text_input("Enter chart title:", value="Modern Infrastructure KPI Performance")
+chart_title = st.selectbox(
+    "Select chart title:",
+    [
+        "Modern Infrastructure KPI Performance",
+        "Thriving Economy KPI Performance",
+        "Human Centric City KPI Performance",
+        "Effective Governance KPI Performance"
+    ]
+)
+
 legend_style = st.radio("Legend Style:", ["Separate (default)", "Unified (bottom combined legend)"])
 score_line_style = st.radio("Score Line Style:", ["Black line", "Colored dots by score"])
 stack_type = st.radio("Bar Height:", ["Raw counts (default)", "100% stacked (proportional)"])
