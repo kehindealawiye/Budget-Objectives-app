@@ -52,6 +52,7 @@ if st.button("Generate Chart"):
 
             fig, ax1 = plt.subplots(figsize=(14, 7))
 
+            # Bar chart
             if stack_type == "100% stacked (proportional)":
                 df["Total"] = df["Green"] + df["Amber"] + df["Red"]
                 df["Green %"] = df["Green"] / df["Total"] * 100
@@ -94,9 +95,9 @@ if st.button("Generate Chart"):
             else:
                 dot_legend = []
 
-            ax1.set_title(chart_title.strip() or "KPI Chart")
+            ax1.set_title(chart_title.strip() or "KPI Chart", pad=20)
 
-            # Legend setup
+            # Legends
             bar_handles, bar_labels = ax1.get_legend_handles_labels()
             if legend_style == "Separate (default)":
                 ax1.legend(bar_handles, bar_labels, loc="upper left")
@@ -104,6 +105,7 @@ if st.button("Generate Chart"):
                     ax1.legend(handles=bar_handles + dot_legend, loc="upper right")
                 elif score_line_style == "Black line":
                     ax2.legend(["Average Score (%)"], loc="upper right")
+                fig.subplots_adjust(top=0.85)
             else:
                 all_handles = bar_handles + dot_legend
                 all_labels = bar_labels + [h.get_label() for h in dot_legend]
@@ -112,7 +114,7 @@ if st.button("Generate Chart"):
 
             st.pyplot(fig)
 
-            # Download
+            # Download button
             buf = io.BytesIO()
             fig.savefig(buf, format="png", bbox_inches="tight")
             st.download_button(
