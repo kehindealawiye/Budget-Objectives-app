@@ -12,6 +12,7 @@ chart_title = st.text_input("Enter chart title:", value="Modern Infrastructure K
 legend_style = st.radio("Legend Style:", ["Separate (default)", "Unified (bottom combined legend)"])
 score_line_style = st.radio("Score Line Style:", ["Black line", "Colored dots by score"])
 stack_type = st.radio("Bar Height:", ["Raw counts (default)", "100% stacked (proportional)"])
+label_option = st.radio("Chart Labels:", ["No labels", "Show total only", "Show all segment labels"])
 
 # Data input areas
 st.markdown("### Paste your data below for each column (one item per line):")
@@ -52,7 +53,6 @@ if st.button("Generate Chart"):
 
             fig, ax1 = plt.subplots(figsize=(14, 7))
 
-            # Bar chart
             if stack_type == "100% stacked (proportional)":
                 df["Total"] = df["Green"] + df["Amber"] + df["Red"]
                 df["Green %"] = df["Green"] / df["Total"] * 100
@@ -76,6 +76,25 @@ if st.button("Generate Chart"):
                 ax1.set_ylabel("Number of Projects")
 
             ax1.tick_params(axis='x', rotation=90)
+
+            # Add labels
+            for i in range(len(df)):
+                green_val = y1[i]
+                amber_val = y2[i]
+                red_val = y3[i]
+                total_val = green_val + amber_val + red_val
+
+                if label_option == "Show total only":
+                    ax1.text(i, total_val + (2 if stack_type == "Raw counts (default)" else 1.5), 
+                             f"{int(total_val)}", ha='center', va='bottom', fontsize=9, fontweight='bold')
+
+                elif label_option == "Show all segment labels":
+                    if green_val > 0:
+                        ax1.text(i, green_val / 2, f"{int(green_val)}", ha='center', va='center', color='white', fontsize=8, fontweight='bold')
+                    if amber_val > 0:
+                        ax1.text(i, green_val + amber_val / 2, f"{int(amber_val)}", ha='center', va='center', color='black', fontsize=8, fontweight='bold')
+                    if red_val > 0:
+                        ax1.text(i, green_val + amber_val + red_val / 2, f"{int(red_val)}", ha='center', va='center', color='white', fontsize=8, fontweight='bold')
 
             # Score line
             ax2 = ax1.twinx()
